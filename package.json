@@ -1,0 +1,29 @@
+{
+	"name": "satdwnld",
+	"version": "0.0.0",
+	"description": "Descargar xml del sat",
+	"license": "MIT",
+	"repository": "NTHINGs/satdwnld",
+	"author": {
+		"name": "",
+		"email": "",
+		"url": "none"
+	},
+	"engines": {
+		"node": ">=6"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		""
+	],
+	"dependencies": {},
+	"devDependencies": {
+		"ava": "^0.25.0",
+		"xo": "^0.21.0"
+	}
+}
