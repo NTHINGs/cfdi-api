@@ -3,43 +3,63 @@
 > Descargar xml del sat
 
 
-## Install
+## Instalar
 
 ```
 $ npm install satdwnld
 ```
 
 
-## Usage
+## Uso
 
 ```js
 const satdwnld = require('satdwnld');
 
-satdwnld('unicorns');
-//=> 'unicorns & rainbows'
+// Regresa una promesa
+satdwnld('rfc', 'contraseña', 'emitidas', {
+    inicio: new Date('May 1, 2018 00:00:00'),
+    final: new Date('May 31, 2018 23:59:59')
+}).then((facturas) => {
+    console.log(facturas);
+});
 ```
 
 
 ## API
 
-### satdwnld(input, [options])
+### satdwnld(rfc, contraseña, modo, [rango de fechas])
 
-#### input
+#### Rfc
 
 Type: `string`
 
-Lorem ipsum.
+RFC que quieras consultar sus facturas.
 
-#### options
+#### Contraseña
+
+Type: `string`
+
+Contraseña del SAT (para iniciar sesión en el portal).
+
+#### Modo
+
+Type: `string`
+
+recibidas || emitidas
+
+#### Rango de fechas
 
 Type: `Object`
 
-##### foo
+Objecto con la fecha inicial y final del rango que quieras consultar.
 
-Type: `boolean`<br>
-Default: `false`
+##### Inicio
 
-Lorem ipsum.
+Type: `Date`
+
+##### Final
+
+Type: `Date`
 
 
 ## License
