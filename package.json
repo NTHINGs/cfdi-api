@@ -29,5 +29,12 @@
 		"ava": "^0.25.0",
 		"nodemon": "^1.17.5",
 		"xo": "^0.21.0"
+	},
+	"xo" : {
+		"rules": {
+			"new-cap": 0,
+			"no-undef": 0,
+			"unicorn/prefer-add-event-listener": 0
+		}
 	}
 }

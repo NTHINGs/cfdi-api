@@ -1,11 +1,52 @@
 import test from 'ava';
 import satdwnld from '.';
 
-test('title', t => {
+test('RFC', t => {
 	const err = t.throws(() => {
-		satdwnld(123);
-	}, TypeError);
-	t.is(err.message, 'Expected a string, got number');
+		satdwnld('', '123', 'recibidas', {
+			inicio: new Date('May 1, 2018 00:00:00'),
+			final: new Date('May 31, 2018 23:59:59')
+		});
+	}, Error);
+	t.is(err.message, 'RFC es requerido');
+});
 
-	t.is(satdwnld('unicorns'), 'unicorns & rainbows');
+test('Password', t => {
+	const err = t.throws(() => {
+		satdwnld('abc', '', 'recibidas', {
+			inicio: new Date('May 1, 2018 00:00:00'),
+			final: new Date('May 31, 2018 23:59:59')
+		});
+	}, Error);
+	t.is(err.message, 'La contraseña es requerida');
+});
+
+test('mode', t => {
+	const err = t.throws(() => {
+		satdwnld('abc', '123', 'todas', {
+			inicio: new Date('May 1, 2018 00:00:00'),
+			final: new Date('May 31, 2018 23:59:59')
+		});
+	}, Error);
+	t.is(err.message, 'Modo inválido, recibí todas');
+});
+
+test('Dates', t => {
+	const errInicial = t.throws(() => {
+		satdwnld('abc', '123', 'recibidas', {
+			inicio: 'May 1, 2018 00:00:00',
+			final: new Date('May 31, 2018 23:59:59')
+		});
+	}, TypeError);
+
+	const errFinal = t.throws(() => {
+		satdwnld('abc', '123', 'recibidas', {
+			inicio: new Date('May 1, 2018 00:00:00'),
+			final: 'May 31, 2018 23:59:59'
+		});
+	}, TypeError);
+
+	t.is(errInicial.message, 'La fecha inicial no es de tipo Date');
+
+	t.is(errFinal.message, 'La fecha final no es de tipo Date');
 });
