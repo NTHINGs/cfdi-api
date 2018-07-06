@@ -2,6 +2,7 @@
 
 > Descargar xml del sat
 
+![Demo](https://raw.githubusercontent.com/NTHINGs/satdwnld/master/run.gif)
 
 ## Instalar
 
