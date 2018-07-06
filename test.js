@@ -3,7 +3,7 @@ import satdwnld from '.';
 
 test('RFC', t => {
 	const err = t.throws(() => {
-		satdwnld('', '123', 'recibidas', {
+		satdwnld('', '123', {
 			inicio: new Date('May 1, 2018 00:00:00'),
 			final: new Date('May 31, 2018 23:59:59')
 		});
@@ -13,7 +13,7 @@ test('RFC', t => {
 
 test('Password', t => {
 	const err = t.throws(() => {
-		satdwnld('abc', '', 'recibidas', {
+		satdwnld('abc', '', {
 			inicio: new Date('May 1, 2018 00:00:00'),
 			final: new Date('May 31, 2018 23:59:59')
 		});
@@ -21,26 +21,26 @@ test('Password', t => {
 	t.is(err.message, 'La contraseña es requerida');
 });
 
-test('mode', t => {
-	const err = t.throws(() => {
-		satdwnld('abc', '123', 'todas', {
-			inicio: new Date('May 1, 2018 00:00:00'),
-			final: new Date('May 31, 2018 23:59:59')
-		});
-	}, Error);
-	t.is(err.message, 'Modo inválido, recibí todas');
-});
+// Test('mode', t => {
+// 	const err = t.throws(() => {
+// 		satdwnld('abc', '123', {
+// 			inicio: new Date('May 1, 2018 00:00:00'),
+// 			final: new Date('May 31, 2018 23:59:59')
+// 		});
+// 	}, Error);
+// 	t.is(err.message, 'Modo inválido, recibí todas');
+// });
 
 test('Dates', t => {
 	const errInicial = t.throws(() => {
-		satdwnld('abc', '123', 'recibidas', {
+		satdwnld('abc', '123', {
 			inicio: 'May 1, 2018 00:00:00',
 			final: new Date('May 31, 2018 23:59:59')
 		});
 	}, TypeError);
 
 	const errFinal = t.throws(() => {
-		satdwnld('abc', '123', 'recibidas', {
+		satdwnld('abc', '123', {
 			inicio: new Date('May 1, 2018 00:00:00'),
 			final: 'May 31, 2018 23:59:59'
 		});
