@@ -15,7 +15,7 @@ Nightmare.action('show',
 
 		done();
 	},
-	(inactive, done) => {
+	function (inactive, done) {
 		this.child.call('show', inactive, done);
 	});
 
@@ -28,7 +28,7 @@ Nightmare.action('hide',
 
 		done();
 	},
-	done => {
+	function (done) {
 		this.child.call('hide', done);
 	});
 
@@ -39,34 +39,34 @@ const nightmare = Nightmare({
 module.exports = (rfc, password, mode, rango) => {
 	validaciones(rfc, password, mode, rango);
 
-	const satUrl = 'https://portalcfdi.facturaelectronica.sat.gob.mx/';
-	const inputRfc = '#rfc';
-	const inputPassword = '#password';
-	const spanAuthUser = '#ctl00_LblRfcAutenticado';
-	const btnBusqueda = '#ctl00_MainContent_BtnBusqueda';
-	const radioFechas = '#ctl00_MainContent_RdoFechas';
-	const selectEstadoComprobante = '#ctl00_MainContent_DdlEstadoComprobante';
+	if (mode === 'recibidas') {
+		mode = '#ctl00_MainContent_RdoTipoBusquedaReceptor';
+	}
+	if (mode === 'emitidas') {
+		mode = '#ctl00_MainContent_RdoTipoBusquedaEmisor';
+	}
 
+	const satUrl = 'https://portalcfdi.facturaelectronica.sat.gob.mx/';
 	const nightmarePromise = new Promise((resolve, reject) => {
 		nightmare
 			.goto(satUrl)
-			.wait(inputRfc)
-			.insert(inputRfc, rfc)
-			.insert(inputPassword, password)
+			.wait('#rfc')
+			.insert('#rfc', rfc)
+			.insert('#password', password)
 			// El span aparece en el home despues de iniciar sesión
-			.wait(spanAuthUser)
+			.wait('#ctl00_LblRfcAutenticado')
 			// Verificar que el RFC proporcionado sea el que inicio sesión
 			.evaluate(rfc => {
-				if (rfc !== (document.querySelector(spanAuthUser).innerText.split(':')[1]).split(' ')[1]) {
+				if (rfc !== (document.querySelector('#ctl00_LblRfcAutenticado').innerText.split(':')[1]).split(' ')[1]) {
 					throw new Error('RFC PROPORCIONADO NO COINCIDE CON EL QUE INICIO SESION');
 				}
 			}, rfc)
 			.hide()
 			.click(mode)
-			.click(btnBusqueda)
-			.wait(radioFechas)
-			.click(radioFechas)
-			.wait(1000)
+			.click('#ctl00_MainContent_BtnBusqueda')
+			.wait('#ctl00_MainContent_RdoFechas')
+			.click('#ctl00_MainContent_RdoFechas')
+			.wait(1500)
 			.evaluate(rango => {
 				function parseDate(date) {
 					if (!(date instanceof Date)) {
@@ -87,9 +87,9 @@ module.exports = (rfc, password, mode, rango) => {
 				updateDateField('ctl00$MainContent$CldFechaFinal2$Calendario_text', parseDate(rango.final));
 			}, rango)
 			.wait(500)
-			.select(selectEstadoComprobante, 1)
+			.select('#ctl00_MainContent_DdlEstadoComprobante', 1)
 			.wait(500)
-			.click(btnBusqueda)
+			.click('#ctl00_MainContent_BtnBusqueda')
 			.wait(1500)
 			.evaluate(() => {
 				const promises = [];
@@ -104,10 +104,7 @@ module.exports = (rfc, password, mode, rango) => {
 
 							const xhr = new XMLHttpRequest();
 							xhr.open('GET', blobUrl, true);
-							xhr.onload = error => {
-								if (error) {
-									reject(error);
-								}
+							xhr.onload = () => {
 								if (xhr.readyState === 4) {
 									if (xhr.status === 200) {
 										resolve(xhr.responseText);
@@ -143,11 +140,7 @@ function validaciones(rfc, password, mode, rango) {
 	if (!password) {
 		throw new Error('La contraseña es requerida');
 	}
-	if (mode === 'recibidas') {
-		mode = '#ctl00_MainContent_RdoTipoBusquedaReceptor';
-	} else if (mode === 'emitidas') {
-		mode = '#ctl00_MainContent_RdoTipoBusquedaEmisor';
-	} else {
+	if (mode !== 'recibidas' && mode !== 'emitidas') {
 		throw new Error(`Modo inválido, recibí ${mode}`);
 	}
 	if (!rango.inicio) {
