@@ -1,12 +1,12 @@
 {
 	"name": "satdwnld",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Descargar xml del sat",
 	"license": "MIT",
 	"repository": "NTHINGs/satdwnld",
 	"author": {
-		"name": "",
-		"email": "",
+		"name": "Mauricio Martinez (NTHINGs)",
+		"email": "n_othing@hotmail.com",
 		"url": "none"
 	},
 	"engines": {
@@ -20,7 +20,12 @@
 		"index.js"
 	],
 	"keywords": [
-		""
+		"sat",
+		"cfdi",
+		"nodejs",
+		"javascript",
+		"descargar",
+		"facturas"
 	],
 	"dependencies": {
 		"nightmare": "^3.0.1"

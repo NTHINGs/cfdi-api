@@ -33,10 +33,15 @@ Nightmare.action('hide',
 	});
 
 const nightmare = Nightmare({
+	// OpenDevTools: {
+	// 	mode: 'detach'
+	// },
 	show: true
 });
 
-module.exports = (rfc, password, mode, rango) => {
+// TODO: module.exports = (rfc, password, mode, rango) => {
+module.exports = (rfc, password, rango) => {
+	let mode = 'recibidas';
 	validaciones(rfc, password, mode, rango);
 
 	if (mode === 'recibidas') {
@@ -67,6 +72,10 @@ module.exports = (rfc, password, mode, rango) => {
 			.wait('#ctl00_MainContent_RdoFechas')
 			.click('#ctl00_MainContent_RdoFechas')
 			.wait(1500)
+			.wait(30000)
+			.wait(30000)
+			.wait(30000)
+			.wait(30000)
 			.evaluate(rango => {
 				function parseDate(date) {
 					if (!(date instanceof Date)) {

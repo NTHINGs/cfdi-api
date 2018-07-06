@@ -17,7 +17,7 @@ $ npm install satdwnld
 const satdwnld = require('satdwnld');
 
 // Regresa una promesa
-satdwnld('rfc', 'contraseña', 'emitidas', {
+satdwnld('rfc', 'contraseña', {
     inicio: new Date('May 1, 2018 00:00:00'),
     final: new Date('May 31, 2018 23:59:59')
 }).then((facturas) => {
@@ -28,7 +28,7 @@ satdwnld('rfc', 'contraseña', 'emitidas', {
 
 ## API
 
-### satdwnld(rfc, contraseña, modo, [rango de fechas])
+### satdwnld(rfc, contraseña, [rango de fechas])
 
 #### Rfc
 
@@ -41,12 +41,6 @@ RFC que quieras consultar sus facturas.
 Type: `string`
 
 Contraseña del SAT (para iniciar sesión en el portal).
-
-#### Modo
-
-Type: `string`
-
-recibidas || emitidas
 
 #### Rango de fechas
 
@@ -62,6 +56,9 @@ Type: `Date`
 
 Type: `Date`
 
+## TODO
+
+- Facturas recibidas
 
 ## License
 
