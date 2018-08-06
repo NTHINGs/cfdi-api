@@ -1,6 +1,8 @@
 'use strict';
 const Nightmare = require('nightmare');
 
+let nightmare = null;
+
 Nightmare.action('show',
 	(name, options, parent, win, renderer, done) => {
 		parent.respondTo('show', (inactive, done) => {
@@ -21,27 +23,31 @@ Nightmare.action('show',
 
 Nightmare.action('hide',
 	(name, options, parent, win, renderer, done) => {
-		parent.respondTo('hide', done => {
-			win.hide();
+		parent.respondTo('hide', (debugMode, done) => {
+			if (!debugMode) {
+				win.hide();
+			}
 			done();
 		});
 
 		done();
 	},
-	function (done) {
-		this.child.call('hide', done);
+	function (debugMode, done) {
+		this.child.call('hide', debugMode, done);
 	});
 
-const nightmare = Nightmare({
-	// OpenDevTools: {
-	// 	mode: 'detach'
-	// },
-	show: true
-});
-
+require('nightmare-upload')(Nightmare);
 // TODO: module.exports = (rfc, password, mode, rango) => {
-module.exports = (rfc, password, rango) => {
-	let mode = 'recibidas';
+module.exports = (rfc, password, rango, debug) => {
+	if (debug) {
+		nightmare = Nightmare({
+			show: true
+		});
+	} else {
+		nightmare = Nightmare();
+	}
+
+	let mode = 'emitidas';
 	validaciones(rfc, password, mode, rango);
 
 	if (mode === 'recibidas') {
@@ -55,10 +61,18 @@ module.exports = (rfc, password, rango) => {
 	const nightmarePromise = new Promise((resolve, reject) => {
 		nightmare
 			.goto(satUrl)
-			.wait('#rfc')
-			.insert('#rfc', rfc)
-			.insert('#password', password)
-			// El span aparece en el home despues de iniciar sesión
+			.wait(5000)
+			.click('#buttonFiel')
+			.wait('#submit')
+			.upload('#fileCertificate', 'C:\\Users\\mauricio.m\\Documents\\00001000000411530467.cer')
+			.upload('#filePrivateKey', 'C:\\Users\\mauricio.m\\Documents\\Claveprivada_FIEL_MAPM940720QI5_20180714_110105.key')
+			.insert('#privateKeyPassword', 'Tomas135')
+			.click('#submit')
+			// .wait(30000)
+			// .wait('#rfc')
+			// .insert('#rfc', rfc)
+			// .insert('#password', password)
+			// // El span aparece en el home despues de iniciar sesión
 			.wait('#ctl00_LblRfcAutenticado')
 			// Verificar que el RFC proporcionado sea el que inicio sesión
 			.evaluate(rfc => {
@@ -66,16 +80,12 @@ module.exports = (rfc, password, rango) => {
 					throw new Error('RFC PROPORCIONADO NO COINCIDE CON EL QUE INICIO SESION');
 				}
 			}, rfc)
-			.hide()
+			.hide(debug)
 			.click(mode)
 			.click('#ctl00_MainContent_BtnBusqueda')
 			.wait('#ctl00_MainContent_RdoFechas')
 			.click('#ctl00_MainContent_RdoFechas')
 			.wait(1500)
-			.wait(30000)
-			.wait(30000)
-			.wait(30000)
-			.wait(30000)
 			.evaluate(rango => {
 				function parseDate(date) {
 					if (!(date instanceof Date)) {
@@ -99,33 +109,38 @@ module.exports = (rfc, password, rango) => {
 			.select('#ctl00_MainContent_DdlEstadoComprobante', 1)
 			.wait(500)
 			.click('#ctl00_MainContent_BtnBusqueda')
-			.wait(1500)
+			.wait(5000)
 			.evaluate(() => {
 				const promises = [];
 				for (const facturaElement of document.getElementsByName('BtnDescarga')) {
 					promises.push(
 						new Promise((resolve, reject) => {
-							const regex = /'.*?'/g;
-							const downloadFunction = facturaElement.getAttribute('onclick');
-
-							let blobUrl = regex.exec(downloadFunction)[0].slice(1, -1);
-							blobUrl = (window.location.href.replace(window.location.pathname, '')) + '/' + blobUrl;
-
-							const xhr = new XMLHttpRequest();
-							xhr.open('GET', blobUrl, true);
-							xhr.onload = () => {
-								if (xhr.readyState === 4) {
-									if (xhr.status === 200) {
-										resolve(xhr.responseText);
-									} else {
-										console.error(xhr.statusText);
-										reject(xhr.statusText);
-									}
-								}
-							};
-							xhr.send();
+							resolve(window.location.href.replace(window.location.pathname, ''));
 						})
 					);
+					// Promises.push(
+					// 	new Promise((resolve, reject) => {
+					// 		const regex = /'.*?'/g;
+					// 		const downloadFunction = facturaElement.getAttribute('onclick');
+
+					// 		let blobUrl = regex.exec(downloadFunction)[0].slice(1, -1);
+					// 		blobUrl = (window.location.href.replace(window.location.pathname, '')) + '/' + blobUrl;
+
+					// 		const xhr = new XMLHttpRequest();
+					// 		xhr.open('GET', blobUrl, true);
+					// 		xhr.onload = () => {
+					// 			if (xhr.readyState === 4) {
+					// 				if (xhr.status === 200) {
+					// 					resolve(xhr.responseText);
+					// 				} else {
+					// 					console.error(xhr.statusText);
+					// 					reject(xhr.statusText);
+					// 				}
+					// 			}
+					// 		};
+					// 		xhr.send();
+					// 	})
+					// );
 				}
 
 				return Promise.all(promises);
@@ -134,7 +149,6 @@ module.exports = (rfc, password, rango) => {
 				resolve(xmls);
 			})
 			.catch(e => {
-				console.log(e);
 				reject(e);
 			});
 	});

@@ -1,9 +1,9 @@
 {
-	"name": "satdwnld",
-	"version": "1.0.2",
+	"name": "cfdi-api",
+	"version": "0.0.0",
 	"description": "Descargar xml del sat",
 	"license": "MIT",
-	"repository": "NTHINGs/satdwnld",
+	"repository": "NTHINGs/cfdi-api",
 	"author": {
 		"name": "Mauricio Martinez (NTHINGs)",
 		"email": "n_othing@hotmail.com",
@@ -25,21 +25,24 @@
 		"nodejs",
 		"javascript",
 		"descargar",
-		"facturas"
+		"facturas",
+		"xml"
 	],
 	"dependencies": {
-		"nightmare": "^3.0.1"
+		"nightmare": "^3.0.1",
+		"nightmare-upload": "^0.1.1"
 	},
 	"devDependencies": {
 		"ava": "^0.25.0",
 		"nodemon": "^1.17.5",
 		"xo": "^0.21.0"
 	},
-	"xo" : {
+	"xo": {
 		"rules": {
 			"new-cap": 0,
 			"no-undef": 0,
-			"unicorn/prefer-add-event-listener": 0
+			"unicorn/prefer-add-event-listener": 0,
+			"max-params": 0
 		}
 	}
 }
