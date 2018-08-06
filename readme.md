@@ -1,8 +1,10 @@
-# satdwnld [![Build Status](https://travis-ci.org/NTHINGs/satdwnld.svg?branch=master)](https://travis-ci.org/NTHINGs/satdwnld)
+# cfdi-api [![Build Status](https://travis-ci.org/NTHINGs/satdwnld.svg?branch=master)](https://travis-ci.org/NTHINGs/satdwnld)
 
-> Descargar xml del sat
+> Obtener cfdi de forma masiva con el nuevo web service del sat
 
-![Demo](https://raw.githubusercontent.com/NTHINGs/satdwnld/master/run.gif)
+# AUN EN DESARROLLO
+
+<!-- ![Demo](https://raw.githubusercontent.com/NTHINGs/satdwnld/master/run.gif)
 
 ## Instalar
 
@@ -58,7 +60,7 @@ Type: `Date`
 
 ## TODO
 
-- Facturas recibidas
+- Facturas recibidas -->
 
 ## License
 
